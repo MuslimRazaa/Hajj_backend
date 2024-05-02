@@ -1,5 +1,7 @@
 var express = require("express");
 var app = express();
+app.use(express.json());
+
 var connection = require("./database");
 
 const db = require("./models")
@@ -8,25 +10,32 @@ const {User} = require("./models")
 
 
 
-app.get('/', function(req, res){
-    res.send("my first backend project , backchodi nahi..");
-});
+// app.get('/', function(req, res){
+//     res.send("my first backend project ,..");
+// });
 app.get('/select', function(req, res){
-    res.send("/select ~ ~ my first backend project , backchodi nahi..");
+    res.send("/select ~ ~ my first backend project ..");
 });
-app.get('/insert', function(req, res){
+app.post('/insert', function(req, res){
+    console.log('body',req.body)
     User.create({
-        firstName: "Ali ALi",
-        email: "Ali@gshok.com",
+        firstName: "Clara",
+        email: "calara@gshok.com",
         password:"NewPassword"
-    }).catch((err) =>{
+    })
+    .then(() => {
+        res.send("inserted successfully")
+    })
+    .catch((err) =>{
+        res.send("error in insertion")
         if (err){
             console.log(err)
         }
     })
+    
 });
 app.get('/delete', function(req, res){
-    res.send("/delete ~ ~ my first backend project , backchodi nahi..");
+    res.send("/delete ~ ~ my first backend project.");
 });
 
 
