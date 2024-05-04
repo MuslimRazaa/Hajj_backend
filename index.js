@@ -7,20 +7,31 @@ var connection = require("./database");
 const db = require("./models")
 
 const {User} = require("./models");
-const {AddPackage} = require("./models");
+
+// Import the Package model and pass sequelize
+const PackageModel = require("./models/Package");
+const Package = PackageModel(db.sequelize, db.Sequelize); // Pass sequelize and DataTypes to the Package model
+
+// ------------
 
 
-
-// app.get('/', function(req, res){
-//     res.send("my first backend project ,..");
-// });
-
-console.log(AddPackage, "pacckk"); // Check if AddPackage is defined and imported
-
-app.get('/select', function(req, res){
-    res.send("/select ~ ~ my first backend project ..");
+app.get('/getUser/:id', function(req, res){
+    const userId = req.params.id; // Get the user ID from the request parameters
+    User.findByPk(userId) // Find the user by primary key (assuming your primary key field is named 'id')
+        .then(user => {
+            if (!user) {
+                res.status(404).send('User not found'); // If user is not found, send a 404 response
+            } else {
+                res.json(user); // Send the user data as JSON response
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Internal Server Error'); // If an error occurs, send a 500 response
+        });
 });
-app.post('/insert', function(req, res){
+
+app.post('/addUser', function(req, res){
     console.log('body',req.body)
     User.create({
         firstName: req.body.firstName,
@@ -39,35 +50,54 @@ app.post('/insert', function(req, res){
     })
     .catch((err) =>{
     console.error(err); // Log the error
-    res.status(500).send("Error in insertion of package"); // Send an error response with status code 500
 })
     
 });
-app.post('/AddPackage', function(req, res){
-    console.log('body',req.body)
-    AddPackage.create({
-        packageName: req.body.packageName,
-        availiblity: req.body.availiblity,
-        from: req.body.from,
-        to: req.body.to,
-        startDestination: req.body.startDestination,
-        finalDestination: req.body.finalDestination,
-        price: req.body.price,
-        currency: req.body.currency,
-        packageEssentials: req.body.packageEssentials,
-        travelInformation:req.body.travelInformation,
-        extra: req.body.extra,
-        isDeleted: req.body.isDeleted,
+
+app.post('/addPackage', function(req, res) {
+  const packageData = req.body; // Get the package data from the request body
+  console.log(Package, "my packageeeee"); // Add this line to check the value of Package
+    Package.create({
+        packageName: packageData.packageName,
+        availiblity: packageData.availiblity,
+        from: packageData.from,
+        to: packageData.to,
+        startDestination: packageData.startDestination,
+        finalDestination: packageData.finalDestination,
+        price: packageData.price,
+        currency: packageData.currency,
+        packageEssentials: packageData.packageEssentials,
+        travelInformation: packageData.travelInformation,
+        extra: packageData.extra,
+        isDeleted: packageData.isDeleted,
+        deletedAt: packageData.deletedAt,
+        deletedBy: packageData.deletedBy,
+        createdBy:packageData.createdBy,
+        updatedBy: packageData.updatedBy,
     })
-    .then(() => {
-        res.send("package Added successfully")
+    .then((package) => {
+        res.send("Package added successfully: " + JSON.stringify(package));
     })
-    .catch((err) =>{
-        res.send(err, "error in insertion")
-        if (err){
-            console.log(err)
-        }
-    })
+    .catch((err) => {
+        console.error("Error adding package:", err);
+        res.status(500).send("Error adding package");
+    });
+});
+
+app.get('/getPackage/:id', function(req, res){
+    const packageId = req.params.id; // Get the package ID from the request parameters
+    Package.findByPk(packageId) // Find the package by primary key
+        .then(package => {
+            if (!package) {
+                res.status(404).send('Package not found'); // If package is not found, send a 404 response
+            } else {
+                res.json(package); // Send the package data as JSON response
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Internal Server Error'); // If an error occurs, send a 500 response
+        });
 });
 
 
@@ -76,9 +106,8 @@ db.sequelize.sync().then((req) =>{
 app.listen(3000, function(){
     console.log("app listening on port 3000, hapy hacking");
     connection.connect(function(err){
-        if(err) throw err;
+        if(err) throw console.log(err);
         else console.log("dataBase connected!");
     })
 });
 });
-
