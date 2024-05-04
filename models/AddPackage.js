@@ -1,69 +1,104 @@
 const { EmptyResultError } = require("sequelize")
 
 module.exports =(sequelize, Datatypes) =>{
-    const User = sequelize.define("User", {
-        firstName:{
+    const Package = sequelize.define("Package", {
+        packageName:{
             type: Datatypes.STRING,
             allowWNull: false,
             validate:{
                 notEmpty: true
             },
         },
-        email:{
+        availiblity:{
+            type: Datatypes.BOOLEAN,
+            allowWNull: false,
+            validate:{
+                notEmpty: true
+            },
+        },
+        from:{
             type: Datatypes.STRING,
             allowWNull: false,
             validate:{
                 notEmpty: true
             },
         },
-        password:{
-            type: Datatypes.STRING,
-            allowWNull: false,
-            validate:{
-                notEmpty: true
-            },
-        },
-        roleId:{
+        to:{
             type: Datatypes.INTEGER,
             allowWNull: false,
             validate:{
                 notEmpty: true
             },
         },
-        packageId:{
-            type: Datatypes.INTEGER,
+        startDestination:{
+            type: Datatypes.STRING,
             allowWNull: true,
             validate:{
                 notEmpty: false
             },
         },
-         deletedAt:{
-            type: Datatypes.DATE,
+         finalDestination:{
+            type: Datatypes.STRING,
             allowWNull: false,
             validate:{
                 notEmpty: false
             },
         },
-         deletedBy:{
+         price:{
             type: Datatypes.INTEGER,
             allowWNull: false,
             validate:{
                 notEmpty: false
             },
         },
-         createdBy:{
-            type: Datatypes.INTEGER,
+         currency:{
+            type: Datatypes.STRING,
             allowWNull: false,
             validate:{
                 notEmpty: true
             },
         },
-         updatedBy:{
-            type: Datatypes.INTEGER,
+         packageEssentials:{
+            type: Datatypes.STRING,
             allowWNull: false,
             validate:{
                 notEmpty: false
             },
+        },
+        travelInformation:{
+            type: Datatypes.STRING,
+            allowWNull: false,
+
+        },
+        extra:{
+            type: Datatypes.STRING,
+            allowWNull: false,
+
+        },
+        roomType:{
+            type: Datatypes.STRING,
+            allowWNull: false,
+
+        },
+        deletedAt:{
+            type: Datatypes.DATE,
+            allowWNull: false,
+
+        },
+        createdBy:{
+            type: Datatypes.INTEGER,
+            allowWNull: false,
+
+        },
+        updatedBy:{
+            type: Datatypes.INTEGER,
+            allowWNull: false,
+
+        },
+        deletedBy:{
+            type: Datatypes.INTEGER,
+            allowWNull: false,
+
         },
         isDeleted:{
             type: Datatypes.BOOLEAN,
@@ -72,5 +107,5 @@ module.exports =(sequelize, Datatypes) =>{
 
         },
     });
-    return User;
+    return Package;
 };
